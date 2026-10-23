@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 
-root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+root = os.path.dirname(os.path.abspath(__file__))
 os.chdir(root)
 
 if not os.path.exists("conf.py"):
