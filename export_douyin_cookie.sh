@@ -215,10 +215,8 @@ def get_douyin_cookies():
     print("关键 Cookie:")
     for c in douyin_cookies:
         if c.get("name") in key_cookies:
-            val = c.get("value", "")
-            if len(val) > 30:
-                val = val[:30] + "..."
-            print(f"   {c.get('name')}: {val}")
+            # 篝火：不在终端明文显示 cookie 值，只显示是否获取到
+            print(f"   {c.get('name')}: 已获取（{len(c.get('value', ''))} 字符，值已隐藏）")
 
     return True
 

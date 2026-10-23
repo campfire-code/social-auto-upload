@@ -1,0 +1,10 @@
+{
+  "id": "c26",
+  "slug": "social-auto-upload",
+  "name": "一键多平台发布",
+  "version": "1.0.0-campfire.1",
+  "repo": "campfire-code/social-auto-upload",
+  "license": "MIT",
+  "delivery": "launcher",
+  "upstream": { "repo": "dreammis/social-auto-upload", "license": "MIT", "tag": "v1.0.0-skills.2" }
+}

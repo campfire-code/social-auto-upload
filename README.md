@@ -1,3 +1,79 @@
+# 一键多平台发布（social-auto-upload）
+
+> 篝火出品 · 基于开源项目 [dreammis/social-auto-upload](https://github.com/dreammis/social-auto-upload)（MIT）
+
+> [!WARNING]
+> **风险提示**：本工具通过浏览器自动化替你登录并发布内容到抖音、快手、小红书、视频号、B 站等第三方平台，存在**账号被限流或封禁**、违反平台规则、发布内容侵权的风险，仅供学习研究。请遵守各平台规则与法律法规，**只发布你有权发布的内容**，使用后果自负。本工具只开源，不上架篝火应用区。
+>
+> **Cookie 等同账号密码**：登录后保存在 `cookies/` 目录下的 JSON 文件（Playwright 登录状态）里是**明文**的 Cookie，任何人拿到这些文件就能直接登录并操作你的账号。不要发给别人、不要上传到网盘或 Git 仓库、不要截图；用完或换电脑请删除；怀疑泄露时，到对应平台退出所有登录设备。
+
+一个命令行工具：先在浏览器里登录一次平台账号，之后用 `sau` 命令把视频、图文或文章发布到多个平台。**没有图形界面**（上游的网页版已标注为历史版本、不再维护，篝火版不使用）。
+
+## 下载与启动
+
+到 [Releases](https://github.com/campfire-code/social-auto-upload/releases/latest) 下载 `social-auto-upload_版本号_portable.zip`，解压到一个**路径里没有中文和空格**的文件夹。
+
+- **Windows**：双击「启动（Windows 双击）.bat」。
+- **Mac**：右键「启动（Mac 双击）.command」→「打开」。
+
+第一次启动会自动安装 uv、Python 3.12、依赖、生成 `conf.py` 并下载浏览器内核 Chromium，完成后进入命令行（已激活环境，可直接输入 `sau` 命令）。以后启动很快。
+
+## 前置条件与占用
+
+- **各平台账号**：需要你自己在各平台的创作者后台有账号；登录时在弹出的浏览器里扫码或输入验证码（抖音发布过程中可能要求短信验证码，可在终端输入，或写入根目录的 `verify_code.txt`）。
+- **无需大模型密钥**。
+- **系统软件**：不需要自己装 Chrome（用 patchright 自带的 Chromium）。Markdown 主题文章（`sau article setup`）需要 Node.js 22+，只发视频、图文、HTML/TXT 文章不需要。B 站发布会在首次使用时自动下载 `biliup`。
+- **首次安装耗时与占用**：本机实测（Apple 芯片 Mac，清华 PyPI 镜像）：依赖安装较快，Chromium 下载约 40 秒，浏览器内核约 90 MB。上游文档推荐的 npmmirror 镜像当前没有这个版本的浏览器内核（返回 404），启动脚本会自动改用官方地址。Windows 未实测。
+- **网络**：YouTube / Facebook / Instagram 等海外平台在国内需要代理，见上游说明（`conf.py` 的 `YT_PROXY`、命令行 `--proxy`）。
+
+## Cookie 检查结果（篝火对上游代码的检查）
+
+按关键字检索上游代码（非逐行审计）：
+
+- **存放**：各平台登录状态由 Playwright `storage_state` 写成**明文 JSON**，路径为 `cookies/<平台>_<账号名>.json`；上游没有加密，也没有设置文件权限。`cookies/` 已被 `.gitignore` 忽略，但压缩、复制整个文件夹时会连同带走。
+- **日志**：`sau` 命令和各 uploader 的日志只输出「cookie 有效 / 已失效」这类状态，没有发现打印 Cookie 内容的写法。
+- **已修改**：上游的 `export_douyin_cookie.sh`（从已登录的 Chrome 导出抖音 Cookie）原本会在终端打印 `sessionid` 等关键 Cookie 的前 30 个字符，篝火版改为只显示「已获取」和长度。
+- **未处理**：上游历史 Web 版（`sau_backend.py`）带有下载 Cookie 文件的接口，篝火版不启动它；请不要自行运行并暴露到局域网或公网。
+
+## 怎么用
+
+在启动后的命令行里（每个平台先登录一次，`--account` 是你给这个账号起的本地名字）：
+
+```
+sau douyin login --account 我的账号
+sau douyin check --account 我的账号
+sau douyin upload-video --account 我的账号 --file videos/demo.mp4 --title "标题" --desc "简介"
+```
+
+支持抖音、快手、小红书、B 站、视频号、百家号、大鱼号、支付宝生活号、微博、虎扑、YouTube、知乎、Facebook、Instagram 等，各平台的参数以上游 `docs/CLI.md` 为准。命令行输出和帮助主要是中文，部分为英文。
+
+**保守使用建议**（篝火的建议，不是上游限制）：
+
+- 先用一个小号、一个平台、一条测试内容试发，确认正常再扩大。
+- 不要多账号并发、不要短时间连续发布大量内容、不要把定时发布设得过密——频繁的自动化操作是平台风控封号的主要原因。
+- 发布前自己看一遍标题、简介和素材是否合规。
+
+## 验收用例
+
+| 操作 | 应得到 |
+|---|---|
+| 双击启动脚本，等待安装完成 | 进入命令行并显示 `sau --help` 的平台列表 |
+| 执行 `sau douyin login --account test` 并在弹出的浏览器里扫码 | 生成 `cookies/douyin_test.json`，`sau douyin check --account test` 提示有效 |
+
+## 和上游的区别
+
+- 新增中文说明、`campfire/` 启动脚本（含 `install.py`：生成 `conf.py`、下载浏览器内核，国内镜像失败时回退官方地址）和篝火发布流程（`tool.json`、`.github/workflows/release.yml`）。
+- 修改 `export_douyin_cookie.sh`，不再在终端显示 Cookie 值。
+- 上游没有工作流；其余代码与上游一致。上游默认不涉及大模型接口，无需替换。
+
+## 归属与许可证
+
+本仓库由**篝火**整理发布。软件全部功能与版权归 [dreammis/social-auto-upload](https://github.com/dreammis/social-auto-upload) 原作者所有，按 MIT 许可证再分发（见 `LICENSE`）。全部工具目录见 [toolkit-hub](https://github.com/campfire-code/toolkit-hub)。
+
+---
+
+以下为上游原始说明：
+
 # social-auto-upload
 
 ![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?logo=python&logoColor=white)
