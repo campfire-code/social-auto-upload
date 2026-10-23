@@ -5,7 +5,7 @@ cd /d "%~dp0"
 rem ===== 篝火填写：每个工具不同 =====
 set "TOOL_NAME=一键多平台发布"
 set "PY_VERSION=3.12"
-set "INSTALL_CMD=uv pip install -e . && python campfire/install.py"
+set "INSTALL_CMD=uv pip install -e . && python campfire_install.py"
 set "RUN_CMD=echo. & echo 已进入命令行，可直接输入 sau 命令。账号登录示例：sau douyin login --account 我的账号 & echo. & sau --help & cmd /k"
 set "OPEN_URL="
 rem ===================================

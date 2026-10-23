@@ -4,7 +4,7 @@ cd "$(dirname "$0")" || exit 1
 # ===== 篝火填写：每个工具不同 =====
 TOOL_NAME="一键多平台发布"
 PY_VERSION="3.12"
-INSTALL_CMD="uv pip install -e . && python campfire/install.py"
+INSTALL_CMD="uv pip install -e . && python campfire_install.py"
 RUN_CMD="echo; echo '已进入命令行，可直接输入 sau 命令。账号登录示例：sau douyin login --account 我的账号'; echo; sau --help; exec \"\$SHELL\""
 OPEN_URL=""
 # ===================================
