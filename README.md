@@ -20,7 +20,7 @@
 
 ## 前置条件与占用
 
-- **各平台账号**：需要你自己在各平台的创作者后台有账号；登录时在弹出的浏览器里扫码或输入验证码（抖音发布过程中可能要求短信验证码，可在终端输入，或写入根目录的 `verify_code.txt`）。
+- **各平台账号**：需要你自己在各平台的创作者后台有账号；登录需要手机扫码（上游默认无界面模式，二维码显示在终端或保存为图片；想看到浏览器窗口，在命令后加 `--headed`。登录流程篝火未实测）。验证码方面（抖音发布过程中可能要求短信验证码，可在终端输入，或写入根目录的 `verify_code.txt`）。
 - **无需大模型密钥**。
 - **系统软件**：不需要自己装 Chrome（用 patchright 自带的 Chromium）。Markdown 主题文章（`sau article setup`）需要 Node.js 22+，只发视频、图文、HTML/TXT 文章不需要。B 站发布会在首次使用时自动下载 `biliup`。
 - **首次安装耗时与占用**：本机实测（Apple 芯片 Mac，清华 PyPI 镜像）：依赖安装较快，Chromium 下载约 40 秒，浏览器内核约 90 MB。上游文档推荐的 npmmirror 镜像当前没有这个版本的浏览器内核（返回 404），启动脚本会自动改用官方地址。Windows 未实测。
@@ -58,7 +58,7 @@ sau douyin upload-video --account 我的账号 --file videos/demo.mp4 --title "�
 | 操作 | 应得到 |
 |---|---|
 | 双击启动脚本，等待安装完成 | 进入命令行并显示 `sau --help` 的平台列表 |
-| 执行 `sau douyin login --account test` 并在弹出的浏览器里扫码 | 生成 `cookies/douyin_test.json`，`sau douyin check --account test` 提示有效 |
+| 执行 `sau douyin login --account test` 并用手机扫码 | 生成 `cookies/douyin_test.json`，`sau douyin check --account test` 提示有效 |
 
 ## 和上游的区别
 
